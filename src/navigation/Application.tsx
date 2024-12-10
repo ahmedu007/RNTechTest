@@ -5,6 +5,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { useTheme } from '@/theme';
+import { usePersistLogin } from '@/hooks';
 import { Paths } from '@/navigation/paths';
 
 import { Home, Login } from '@/screens';
@@ -13,6 +14,7 @@ const Stack = createStackNavigator<RootStackParamList>();
 
 function ApplicationNavigator() {
   const { navigationTheme, variant } = useTheme();
+  const isLoggedIn = usePersistLogin();
 
   return (
     <SafeAreaProvider>
@@ -21,8 +23,11 @@ function ApplicationNavigator() {
           key={variant}
           screenOptions={{ headerShown: false, gestureEnabled: true }}
         >
-          <Stack.Screen component={Login} name={Paths.Login} />
-          <Stack.Screen component={Home} name={Paths.Home} />
+          {isLoggedIn ? (
+            <Stack.Screen component={Home} name={Paths.Home} />
+          ) : (
+            <Stack.Screen component={Login} name={Paths.Login} />
+          )}
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>
