@@ -14,6 +14,8 @@ function Login({ user, saveUser }: any) {
   const doLogin = async () => {
     const userData = await login();
     saveUser({ ...userData, isLoggedIn: true });
+    // Ideally save this to encrypted storage
+    // storage.recrypt('some secret')
   };
 
   return (
