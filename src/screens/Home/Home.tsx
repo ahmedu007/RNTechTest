@@ -1,4 +1,10 @@
-import { Button, ScrollView, Text, View } from 'react-native';
+import {
+  ActivityIndicator,
+  Button,
+  ScrollView,
+  Text,
+  View,
+} from 'react-native';
 import { connect } from 'react-redux';
 
 import { useTheme } from '@/theme';
@@ -9,30 +15,32 @@ import { SafeScreen } from '@/components/templates';
 
 import { createAccount } from '@/api';
 import LogoutButton from '@/components/LogoutButton';
+import { SuccessModal } from '@/components/SuccessModal';
 import { logoutUser } from '@/redux/actions/userActions';
 import { calculateBreakdown } from '@/utils';
 
 function Home({ user }: any) {
-  const {
-    backgrounds,
-    changeTheme,
-    colors,
-    components,
-    fonts,
-    gutters,
-    layout,
-  } = useTheme();
+  const { fonts, gutters, layout } = useTheme();
 
-  const { data: account, isLoading, invalidateAccountQuery } = useAccount();
+  const {
+    data: account,
+    // isLoading,
+    invalidateAccountQuery,
+    // refetch,
+  } = useAccount();
   const { status, setStatus } = useStatus();
-  const hasAccount = !!account;
+  const hasPendingAccount = !!account && account.status === 'pending';
+  const hasAccount = !!account && account.status === 'completed';
 
   const handleCreateAccount = async () => {
     try {
       setStatus({ status: 'loading' });
       const account = await createAccount();
-      console.log({ account });
-      setStatus({ status: 'idle' });
+
+      if (account.status === 'completed') {
+        setStatus({ status: 'idle' });
+      }
+      invalidateAccountQuery();
     } catch (e) {
       setStatus({ status: 'error' });
     }
@@ -53,9 +61,6 @@ function Home({ user }: any) {
           ]}
         >
           <Text style={[fonts.size_16, fonts.gray800]}>{user?.name},</Text>
-          {isLoading ? (
-            <Text style={[fonts.size_16, fonts.gray800]}>...</Text>
-          ) : null}
 
           {hasAccount ? (
             <View style={[gutters.gap_12]}>
@@ -83,6 +88,14 @@ function Home({ user }: any) {
                 </Text>
               </View>
             </View>
+          ) : hasPendingAccount ? (
+            <>
+              <Text style={[fonts.size_16, fonts.gray800]}>
+                Your account has been successfully created. Please be patient
+                while we activate your account
+              </Text>
+              <ActivityIndicator />
+            </>
           ) : (
             <View style={[layout.itemsStart]}>
               <Text style={[fonts.size_16, fonts.gray800]}>
@@ -98,13 +111,11 @@ function Home({ user }: any) {
               />
             </View>
           )}
-          <Button
-            title={'Refresh your account'}
-            onPress={invalidateAccountQuery}
-          />
+
           <LogoutButton />
         </View>
       </ScrollView>
+      <SuccessModal modalVisible={hasAccount && !hasPendingAccount} />
     </SafeScreen>
   );
 }
