@@ -6,6 +6,7 @@ import { queryClient } from '@/App';
 const useAccount = () => {
   const queryFn = async () => {
     const account = await getAccount(); // Use your defined `getAccount` function
+
     return account;
   };
 
@@ -18,6 +19,8 @@ const useAccount = () => {
     ...useQuery({
       queryFn,
       queryKey: ['account'],
+      refetchInterval: ({ state: { data } }) =>
+        data?.status === 'pending' ? 5000 : false,
     }),
   };
 };
