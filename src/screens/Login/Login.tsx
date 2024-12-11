@@ -1,5 +1,5 @@
 import { Button, Text, View } from 'react-native';
-import { connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 import { useTheme } from '@/theme';
 
@@ -8,12 +8,13 @@ import { SafeScreen } from '@/components/templates';
 import { login } from '@/api';
 import { saveUser } from '@/redux/actions/userActions';
 
-function Login({ user, saveUser }: any) {
+function Login() {
   const { fonts, layout } = useTheme();
+  const dispatch = useDispatch();
 
   const doLogin = async () => {
     const userData = await login();
-    saveUser({ ...userData, isLoggedIn: true });
+    dispatch(saveUser({ ...userData, isLoggedIn: true }));
     // Ideally save this to encrypted storage
     // storage.recrypt('some secret')
   };
@@ -28,19 +29,11 @@ function Login({ user, saveUser }: any) {
           layout.justifyCenter,
         ]}
       >
-        <Text style={[fonts.size_16, fonts.gray800]}>Hello, {user?.name}</Text>
+        <Text style={[fonts.size_16, fonts.gray800]}>Hello</Text>
         <Button title="Login" onPress={doLogin} />
       </View>
     </SafeScreen>
   );
 }
 
-const mapStateToProps = (state: any) => ({
-  user: state.user,
-});
-
-const mapDispatchToProps = {
-  saveUser,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Login);
+export default Login;
