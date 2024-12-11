@@ -29,7 +29,10 @@ function Login() {
           layout.justifyCenter,
         ]}
       >
-        <Text style={[fonts.size_16, fonts.gray800]}>Hello</Text>
+        <Text style={[fonts.size_32, fonts.gray800]}>Hello 👋</Text>
+        <Text style={[fonts.size_16, fonts.gray800]}>
+          To begin, Please login
+        </Text>
         <Button title="Login" onPress={doLogin} />
       </View>
     </SafeScreen>
