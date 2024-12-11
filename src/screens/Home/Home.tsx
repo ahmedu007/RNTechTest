@@ -8,9 +8,7 @@ import {
 import { connect } from 'react-redux';
 
 import { useTheme } from '@/theme';
-import useAccount from '@/hooks/useAccount';
-import useIsMounted from '@/hooks/useIsMounted';
-import { useStatus } from '@/hooks/useStatus';
+import { useAccount, useIsMounted, useStatus } from '@/hooks/index';
 
 import { SafeScreen } from '@/components/templates';
 

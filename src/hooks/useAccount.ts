@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { getAccount } from '@/api';
 import { queryClient } from '@/App';
 
-const useAccount = (disableFetch: boolean) => {
+export const useAccount = (disableFetch: boolean) => {
   const queryFn = async () => {
     if (disableFetch) return null;
 
@@ -26,4 +26,3 @@ const useAccount = (disableFetch: boolean) => {
     }),
   };
 };
-export default useAccount;
