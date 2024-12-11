@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 
 import { useTheme } from '@/theme';
 import useAccount from '@/hooks/useAccount';
+import useIsMounted from '@/hooks/useIsMounted';
 import { useStatus } from '@/hooks/useStatus';
 
 import { SafeScreen } from '@/components/templates';
@@ -21,13 +22,14 @@ import { calculateBreakdown } from '@/utils';
 
 function Home({ user }: any) {
   const { fonts, gutters, layout } = useTheme();
+  const isMounted = useIsMounted();
 
   const {
     data: account,
     // isLoading,
     invalidateAccountQuery,
-    // refetch,
-  } = useAccount();
+    refetch,
+  } = useAccount(!isMounted());
   const { status, setStatus } = useStatus();
   const hasPendingAccount = !!account && account.status === 'pending';
   const hasAccount = !!account && account.status === 'completed';
@@ -87,6 +89,14 @@ function Home({ user }: any) {
                   Available balance: {breakdown?.availableBalance}
                 </Text>
               </View>
+              <Button
+                onPress={() => {
+                  refetch();
+                }}
+                title="Increase balance"
+                color="#2e8b57"
+                accessibilityLabel="Learn more about this purple button"
+              />
             </View>
           ) : hasPendingAccount ? (
             <>

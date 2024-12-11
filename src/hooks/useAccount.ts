@@ -3,8 +3,10 @@ import { useQuery } from '@tanstack/react-query';
 import { getAccount } from '@/api';
 import { queryClient } from '@/App';
 
-const useAccount = () => {
+const useAccount = (disableFetch: boolean) => {
   const queryFn = async () => {
+    if (disableFetch) return null;
+
     const account = await getAccount(); // Use your defined `getAccount` function
 
     return account;
